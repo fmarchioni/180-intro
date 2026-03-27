@@ -415,6 +415,9 @@ Prima di creare l'applicazione, analizziamo quali parametri accetta il template 
 ```bash
 # Analisi dei parametri del template
 oc process --parameters postgresql-ephemeral -n openshift
+```
+
+```bash
 
 # Creazione dell'applicazione tramite template
 oc new-app --template=postgresql-ephemeral \
