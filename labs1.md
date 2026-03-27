@@ -1,4 +1,20 @@
 # 📦 Laboratori Container & OpenShift
+## Link essenziali:
+
+**Classroom**: https://rol.redhat.com/rol/app/classes/6a1d537a-d716-4e33-9066-a1035ca20d04
+
+**Console OpenShift**: https://console-openshift-console.apps.ocp4.example.com
+
+- Utenze:    
+- admin/redhatocp
+- developer/developer
+
+**Esempio login da linea di comando:**  
+
+
+```
+oc login -u developer -p developer https://api.ocp4.example.com:6443
+```
 
 ## 🧪 Esercizio 1 – Esecuzione immagine da registry
 
