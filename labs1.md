@@ -394,3 +394,63 @@ echo $PASSWORD
 echo $MESSAGE
 ```
  
+ 
+---
+
+## 🧪 Esercizio 9 – OpenShift Templates
+
+In questo esercizio vedremo come esplorare i template di sistema e istanziare un database PostgreSQL personalizzando i parametri di configurazione.
+
+### 1. Preparazione dell'ambiente
+Per prima cosa, creiamo un nuovo progetto dedicato e verifichiamo i template disponibili nel namespace globale di OpenShift.
+
+```bash
+oc new-project demo-templates
+oc get templates -n openshift
+```
+
+### 2. Analisi e Deployment del Template
+Prima di creare l'applicazione, analizziamo quali parametri accetta il template `postgresql-ephemeral`. Successivamente, lo istanziamo passando le nostre credenziali personalizzate.
+
+```bash
+# Analisi dei parametri del template
+oc process --parameters postgresql-ephemeral -n openshift
+
+# Creazione dell'applicazione tramite template
+oc new-app --template=postgresql-ephemeral \
+    -p DATABASE_SERVICE_NAME=mydb-demo \
+    -p POSTGRESQL_USER=admin_user \
+    -p POSTGRESQL_PASSWORD=SecretPassword123 \
+    -p POSTGRESQL_DATABASE=demo_db
+```
+
+### 3. Accesso al Database e Test Funzionale
+Una volta che il Pod è in stato *Running*, entriamo nel container per interagire con il database tramite il client `psql`.
+
+> **Nota:** Sostituisci `mydb-demo-1-vgfkr` con il nome reale del tuo Pod (puoi trovarlo con `oc get pods`).
+
+```bash
+# Accesso remoto al Pod
+oc rsh mydb-demo-1-vgfkr
+```
+
+### Operazioni SQL
+Una volta all'interno della shell del Pod, connettiti al database ed esegui i comandi SQL:
+
+```sql
+-- Connessione al database
+psql -U admin_user -d demo_db
+
+-- Creazione tabella e inserimento dati
+CREATE TABLE demo (id SERIAL PRIMARY KEY, name TEXT);
+INSERT INTO demo (name) VALUES ('OpenShift Rocks');
+
+-- Verifica dei dati
+SELECT * FROM demo;
+
+-- Uscita
+\q
+exit
+```
+
+ 
