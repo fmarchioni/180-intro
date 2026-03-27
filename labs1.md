@@ -245,85 +245,81 @@ Cancella il progetto:
 
 ## 🧪 Esercizio 6 – OpenShift CLI
 
-### 1. Login
+In questo laboratorio impareremo a connetterci al cluster, gestire pod singoli e utilizzare i Deployment per esporre servizi web verso l'esterno.
+
+## 1. Accesso al Cluster
+Il primo passo è autenticarsi presso l'API server di OpenShift utilizzando le credenziali fornite.
 
 ```bash
 oc login -u developer -p developer https://api.ocp4.example.com:6443
 ```
 
-### 2. Nuovo progetto
+## 2. Creazione del Progetto
+Creiamo un namespace isolato per separare le nostre risorse da quelle degli altri utenti.
 
 ```bash
 oc new-project cli-project
 ```
 
----
-
-### 3. Crea Pod
-
-```bash
-oc run web-server --image registry.access.redhat.com/ubi10/httpd-24
-```
+## 3. Test con Pod Singolo (Effimero)
+Creiamo un pod direttamente dall'immagine Apache. Un pod creato con `oc run` non viene gestito da un controller: se viene rimosso, non verrà ricreato.
 
 ```bash
-oc get pods
+oc run pod-web --image=registry.access.redhat.com/ubi9/httpd-24
 ```
 
----
-
-### 4. Espone Pod
+Verifica dei log per confermare che il server sia attivo:
 
 ```bash
-oc expose pod web-server --port=8080 --target-port=8080 --name=web-server-svc
+oc logs pod-web
 ```
+
+Eliminiamo il pod per testarne la natura effimera:
 
 ```bash
-oc get service
+oc delete pod pod-web
 ```
 
----
-
-### 5. Crea Route
+## 4. Deployment e Alta Affidabilità
+Utilizziamo ora un **Deployment**. A differenza del comando precedente, il Deployment garantisce che il pod sia sempre attivo e ne permette la scalabilità.
 
 ```bash
-oc expose svc web-server-svc
+oc create deployment web-server --image=registry.access.redhat.com/ubi9/httpd-24
 ```
+
+
+
+## 5. Esposizione del Servizio e Accesso Esterno
+Per rendere l'applicazione raggiungibile, dobbiamo creare un **Service** (IP interno stabile) e una **Route** (URL pubblico).
+
+Creazione del Service (porta interna **8080**):
 
 ```bash
-oc get route
+oc expose deployment web-server --port=8080 --target-port=8080
 ```
 
----
-
-### 6. Test
+Creazione della Route:
 
 ```bash
-curl web-server-svc-cli-project.apps.ocp4.example.com
+oc expose service web-server
 ```
 
----
 
-### 7. Conversione in Deployment
+
+## 6. Verifica Finale
+Recuperiamo l'URL pubblico assegnato dal router di OpenShift:
 
 ```bash
-oc delete pod web-server
+oc get route web-server
 ```
+
+Eseguiamo un test di connessione per verificare che la pagina web sia raggiungibile (sostituisci l'URL con quello reale ottenuto dal comando precedente):
 
 ```bash
-oc create deployment web-server --image=registry.access.redhat.com/ubi10/httpd-24
+curl web-server-cli-project.apps.ocp4.example.com
 ```
 
-```bash
-oc get pods
-oc get route
-```
-
-```bash
-curl web-server-svc-cli-project.apps.ocp4.example.com
-```
-
----
-
+ 
 ## 🧪 Esercizio 7 – Monitoraggio
 
 ### Console Web
