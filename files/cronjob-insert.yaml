@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mysql-insert-messaggi
+spec:
+  schedule: "*/1 * * * *"   # ogni minuto
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: mysql-client
+            image: registry.ocp4.example.com:8443/rhel9/mysql-80
+            command: ["sh", "-c"]
+            args:
+              - >
+                TS=$(date +%H:%M:%S);
+                MSG="messaggio inviato: $TS";
+                mysql -h mysql -P 3306 -u root -predhat
+                -e "USE demo; INSERT INTO messaggi (message) VALUES ('$MSG');"
