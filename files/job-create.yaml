@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mysql-init-schema
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: mysql-client
+        image: registry.ocp4.example.com:8443/rhel9/mysql-80
+        command: ["sh", "-c"]
+        args:
+          - >
+            mysql -h mysql -P 3306 -u root -predhat
+            -e "
+              CREATE DATABASE IF NOT EXISTS demo;
+              USE demo;
+              CREATE TABLE IF NOT EXISTS messaggi (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                message TEXT
+              );
+            "
