@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mysql-select-messaggi
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: mysql-client
+        image: registry.ocp4.example.com:8443/rhel9/mysql-80
+        command: ["sh", "-c"]
+        args:
+          - >
+            mysql -h mysql -P 3306 -u root -predhat
+            -e "USE demo; SELECT * from messaggi;"
