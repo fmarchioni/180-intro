@@ -30,7 +30,7 @@ Crea da Console Web il Project "storage-demo":
 ## 3. Creazione Deployment MySQL
 
 * Seleziona **Workloads** -> **Deployments**
-* Clicca su **Create Deployment**
+* Clicca su **Create Deployment** nome: **mysql**
 * Seleziona in alto il progetto **“storage-demo”**
 * Usa l'immagine: `registry.ocp4.example.com:8443/rhel9/mysql-80`
 
