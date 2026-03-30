@@ -12,6 +12,12 @@ Seleziona l'opzione **Red Hat Identity Management** e utilizza le seguenti crede
 * **Username:** `admin`
 * **Password:** `redhatocp`
 
+Esegui il login anche da terminale:
+
+```
+oc login -u admin -p redhatocp
+```
+
 ---
 
 ## 2. Creazione Progetto
