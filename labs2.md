@@ -15,7 +15,7 @@ Seleziona l'opzione **Red Hat Identity Management** e utilizza le seguenti crede
 Esegui il login anche da terminale:
 
 ```
-oc login -u admin -p redhatocp
+oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
 ```
 
 ---
